@@ -419,7 +419,7 @@
 			dr_mode = "host";
 			status = "okay";
 		};
-		msscan: can@2010c000 {
+		can0: can@2010c000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "microchip,mpfs-can-uio";
@@ -427,6 +427,18 @@
 			interrupt-parent = <&L1>;
 			interrupts = <56>;
 			clocks = <&clkcfg CLK_CAN0>;
+			linux,can-index = <0>;
+			status = "okay";
+		};
+		can1: can@2010d000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "microchip,mpfs-can-uio";
+			reg = <0x0 0x2010d000 0x0 0x1000>;
+			interrupt-parent = <&L1>;
+			interrupts = <57>;
+			clocks = <&clkcfg CLK_CAN1>;
+			linux,can-index = <1>;
 			status = "okay";
 		};
 		mssspi0: spi@20108000 {
