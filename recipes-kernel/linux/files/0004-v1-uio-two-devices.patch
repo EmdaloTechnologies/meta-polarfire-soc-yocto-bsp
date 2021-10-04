@@ -1,0 +1,26 @@
+diff --git a/drivers/uio/uio-microchip-can.c b/drivers/uio/uio-microchip-can.c
+index 5145c0c114ad..ccfe2827c247 100644
+--- a/drivers/uio/uio-microchip-can.c
++++ b/drivers/uio/uio-microchip-can.c
+@@ -76,7 +76,9 @@ static int can_probe(struct platform_device *pdev)
+ 	struct uio_can_dev *dev_info;
+ 	struct resource *res;
+ 	struct device *dev = &pdev->dev;
+-	int ret = -ENODEV, cnt = 0, len;
++	//struct device_node *node = pdev->dev.of_node;
++	int ret = -ENODEV, len;
++	static int cnt = 0;
+ 
+ 	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
+ 	if (!dev_info)
+@@ -136,7 +138,9 @@ static int can_probe(struct platform_device *pdev)
+ 
+ 	uio_info->mem[1].size = 0;
+ 
+-	uio_info->name = kasprintf(GFP_KERNEL, "uiocan%d", cnt);
++	//uio_info->name = devm_kasprintf(dev, GFP_KERNEL, "uiocan-%pOFn", node);
++	uio_info->name = devm_kasprintf(dev, GFP_KERNEL, "uiocan%d", cnt);
++	cnt++;
+ 	uio_info->version = DRV_VERSION;
+ 
+ 	/* register CAN IRQ lines */

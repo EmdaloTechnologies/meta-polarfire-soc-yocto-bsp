@@ -11,6 +11,10 @@ SRC_URI = " \
 
 SRC_URI_append_icicle-kit-es = " \
     file://icicle-kit-es-microchip.dts \
+    file://0001-v1-uio-can-clear-interrupt-in-kernel-not-user-space.patch \
+    file://0002-v1-gpio-irq-fix.patch \
+    file://0003-v2-gpio-bit31-fix.patch \
+    file://0004-v1-uio-two-devices.patch \
  "
 
 SRC_URI_append_icicle-kit-es-amp = " \

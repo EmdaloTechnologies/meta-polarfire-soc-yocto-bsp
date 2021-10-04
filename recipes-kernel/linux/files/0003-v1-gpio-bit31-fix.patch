@@ -1,0 +1,25 @@
+From 263aa22de547fd1e300f49ff4056e75b5223fdd5 Mon Sep 17 00:00:00 2001
+From: Lewis Hanly <lewis.hanly@microchip.com>
+Date: Mon, 27 Sep 2021 11:31:19 +0100
+Subject: [PATCH v1 2/2] Up
+
+---
+ drivers/gpio/gpio-microsemi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-microsemi.c b/drivers/gpio/gpio-microsemi.c
+index f0867b18cd72..766e521ad4da 100644
+--- a/drivers/gpio/gpio-microsemi.c
++++ b/drivers/gpio/gpio-microsemi.c
+@@ -200,7 +200,7 @@ static int microsemi_mss_gpio_get_value(struct gpio_chip *gc,
+ 	if (gpio_index >= gc->ngpio)
+ 		return -EINVAL;
+ 
+-	result = MSS_GPIO_IOREAD(mss_gpio->gpio_in_base) &
++	result = !!(MSS_GPIO_IOREAD(mss_gpio->gpio_in_base) &
+ 			BIT(gpio_index));
+ 
+ 	return result;
+-- 
+2.25.1
+
