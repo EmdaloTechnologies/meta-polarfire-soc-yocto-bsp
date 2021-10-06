@@ -1,0 +1,67 @@
+From b93471b4b5df742d4aa1ef5a8b9fd204e42b5bf8 Mon Sep 17 00:00:00 2001
+From: Daire McNamara <daire.mcnamara@microchip.com>
+Date: Wed, 6 Oct 2021 11:23:33 +0000
+Subject: [PATCH v2 1/1] uio: can: microchip: add 'uio,can-index' dt property
+ to distinguish two can devices
+
+---
+ drivers/uio/uio-microchip-can.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/uio/uio-microchip-can.c b/drivers/uio/uio-microchip-can.c
+index 5145c0c114ad..9d737d6ef1d9 100644
+--- a/drivers/uio/uio-microchip-can.c
++++ b/drivers/uio/uio-microchip-can.c
+@@ -65,7 +65,6 @@ static void can_cleanup(struct device *dev, struct uio_can_dev *dev_info)
+ 	}
+ 	iounmap(dev_info->base);
+ 	kfree(dev_info->uio_info);
+-	clk_disable(dev_info->clk);
+ 	clk_put(dev_info->clk);
+ 	kfree(dev_info);
+ }
+@@ -76,7 +75,8 @@ static int can_probe(struct platform_device *pdev)
+ 	struct uio_can_dev *dev_info;
+ 	struct resource *res;
+ 	struct device *dev = &pdev->dev;
+-	int ret = -ENODEV, cnt = 0, len;
++	struct device_node *np = dev->of_node;
++	int ret = -ENODEV, len, cnt;
+ 
+ 	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
+ 	if (!dev_info)
+@@ -116,14 +116,14 @@ static int can_probe(struct platform_device *pdev)
+ 
+ 	dev_info->base = ioremap(res->start, len);
+ 	if (!dev_info->base) {
+-		dev_err(dev, "failed to remap CAN I/O  address range\n");
++		dev_err(dev, "failed to remap CAN I/O address range\n");
+ 		ret = -ENODEV;
+ 		goto out_free;
+ 	}
+ 
+ 	dev_info->irq = platform_get_irq(pdev, 0);
+ 	if (dev_info->irq < 0) {
+-		dev_err(dev, "failed to get irq.\n");
++		dev_err(dev, "failed to get irq\n");
+ 		ret = -ENODEV;
+ 		goto out_free;
+ 	}
+@@ -136,7 +136,13 @@ static int can_probe(struct platform_device *pdev)
+ 
+ 	uio_info->mem[1].size = 0;
+ 
+-	uio_info->name = kasprintf(GFP_KERNEL, "uiocan%d", cnt);
++	if (of_property_read_u32(np, "uio,can-index", &cnt) < 0) {
++		dev_err(dev, "failed to get uio,can-index property\n");
++		ret = -ENODEV;
++		goto out_free;
++	}
++
++	uio_info->name = devm_kasprintf(dev, GFP_KERNEL, "uiocan%d", cnt);
+ 	uio_info->version = DRV_VERSION;
+ 
+ 	/* register CAN IRQ lines */
+-- 
+2.25.1
+
