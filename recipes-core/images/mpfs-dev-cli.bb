@@ -8,8 +8,10 @@ IMAGE_FEATURES += " ssh-server-openssh \
                   "
 
 IMAGE_INSTALL = "\
+    rc-local \
     mtd-utils \
     mtd-utils-misc \
+    ppp \
     iperf3 \
     devmem2 \
     packagegroup-core-boot \

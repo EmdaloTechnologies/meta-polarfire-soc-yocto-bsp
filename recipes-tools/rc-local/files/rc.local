@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# For /etc/rc.local on PolarFire
+
+echo "Mananging Pi logs..."
+mkdir -p /var/log/pi
+
+echo "Starting pppd..."
+stty -F /dev/ttyS2 raw
+stty -F /dev/ttyS2 -a
+pppd /dev/ttyS2 115200 192.168.30.2:192.168.30.1 noauth local debug dump nocrtscts persist maxfail 0 holdoff 1
+
+exit 0
