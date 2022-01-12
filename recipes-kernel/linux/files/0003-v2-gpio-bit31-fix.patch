@@ -5,22 +5,24 @@ Subject: [PATCH v2 1/1] gpio: microchip: convert 'bitwise and' to boolean in
  gpio_get_value()
 
 ---
- drivers/gpio/gpio-microsemi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-microsemi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpio-microsemi.c b/drivers/gpio/gpio-microsemi.c
-index f0867b18cd72..934ff29ad882 100644
+index f0867b18cd72..3a265ff27ff1 100644
 --- a/drivers/gpio/gpio-microsemi.c
 +++ b/drivers/gpio/gpio-microsemi.c
-@@ -200,7 +200,7 @@ static int microsemi_mss_gpio_get_value(struct gpio_chip *gc,
+@@ -200,8 +200,8 @@ static int microsemi_mss_gpio_get_value(struct gpio_chip *gc,
  	if (gpio_index >= gc->ngpio)
  		return -EINVAL;
  
 -	result = MSS_GPIO_IOREAD(mss_gpio->gpio_in_base) &
-+	result = !!MSS_GPIO_IOREAD(mss_gpio->gpio_in_base) &
- 			BIT(gpio_index);
+-			BIT(gpio_index);
++	result = !!(MSS_GPIO_IOREAD(mss_gpio->gpio_in_base) &
++			BIT(gpio_index));
  
  	return result;
+ }
 -- 
 2.25.1
 
