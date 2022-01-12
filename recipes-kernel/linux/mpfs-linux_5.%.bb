@@ -3,10 +3,12 @@ require recipes-kernel/linux/mpfs-linux-common.inc
 LINUX_VERSION ?= "5.12.1"
 KERNEL_VERSION_SANITY_SKIP="1"
 
+SRCREV="c9869ee80e3c0d5dd21f34fe32bd9339502d7618"
+
 BRANCH = "mpfs-linux-5.12.x"
-SRCREV = "${AUTOREV}"
+
 SRC_URI = " \
-    git://github.com/polarfire-soc/linux.git;branch=${BRANCH} \
+    git://git@bitbucket.microchip.com/fpga_pfsoc_es/linux.git;branch=${BRANCH};protocol=ssh \
 "
 
 SRC_URI_append_icicle-kit-es = " \
