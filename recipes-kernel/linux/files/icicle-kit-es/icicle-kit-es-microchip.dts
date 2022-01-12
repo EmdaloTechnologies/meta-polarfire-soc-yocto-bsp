@@ -431,7 +431,7 @@
 			interrupt-parent = <&L1>;
 			interrupts = <87 86>;
 			interrupt-names = "mc","dma";
-			dr_mode = "host";
+			dr_mode = "otg";
 			status = "okay";
 		};
 		can0: can@2010c000 {
@@ -442,7 +442,7 @@
 			interrupt-parent = <&L1>;
 			interrupts = <56>;
 			clocks = <&clkcfg CLK_CAN0>;
-			uio,can-index = <0>;
+			linux,can-index = <0>;
 			status = "okay";
 		};
 		can1: can@2010d000 {
@@ -453,7 +453,7 @@
 			interrupt-parent = <&L1>;
 			interrupts = <57>;
 			clocks = <&clkcfg CLK_CAN1>;
-			uio,can-index = <1>;
+			linux,can-index = <1>;
 			status = "okay";
 		};
 		mssspi0: spi@20108000 {

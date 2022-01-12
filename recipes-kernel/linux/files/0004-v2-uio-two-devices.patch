@@ -1,7 +1,7 @@
 From b93471b4b5df742d4aa1ef5a8b9fd204e42b5bf8 Mon Sep 17 00:00:00 2001
 From: Daire McNamara <daire.mcnamara@microchip.com>
 Date: Wed, 6 Oct 2021 11:23:33 +0000
-Subject: [PATCH v2 1/1] uio: can: microchip: add 'uio,can-index' dt property
+Subject: [PATCH v2 1/1] uio: can: microchip: add 'linux,can-index' dt property
  to distinguish two can devices
 
 ---
@@ -52,8 +52,8 @@ index 5145c0c114ad..9d737d6ef1d9 100644
  	uio_info->mem[1].size = 0;
  
 -	uio_info->name = kasprintf(GFP_KERNEL, "uiocan%d", cnt);
-+	if (of_property_read_u32(np, "uio,can-index", &cnt) < 0) {
-+		dev_err(dev, "failed to get uio,can-index property\n");
++	if (of_property_read_u32(np, "linux,can-index", &cnt) < 0) {
++		dev_err(dev, "failed to get linux,can-index property\n");
 +		ret = -ENODEV;
 +		goto out_free;
 +	}
