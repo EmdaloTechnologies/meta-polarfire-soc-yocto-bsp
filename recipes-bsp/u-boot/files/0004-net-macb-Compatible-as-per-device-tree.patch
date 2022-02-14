@@ -1,12 +1,13 @@
-From f97e1a556ef9d29ef91975424842322267ea470b Mon Sep 17 00:00:00 2001
+From 372b1be9ae8c9914c8b99f5d34185d6143cefab5 Mon Sep 17 00:00:00 2001
 From: Padmarao Begari <padmarao.begari@microchip.com>
 Date: Tue, 21 Dec 2021 00:04:58 +0530
-Subject: [PATCH v1 4/5] net: macb: Compatible as per device tree
+Subject: [PATCH] net: macb: Compatible as per device tree
 
 Remove the microchip compatible string and default compatible "cdns,macb"
 support both 32-bit and 64-bit DMA access.
 
 Signed-off-by: Padmarao Begari <padmarao.begari@microchip.com>
+
 ---
  drivers/net/macb.c | 19 ++++++++-----------
  1 file changed, 8 insertions(+), 11 deletions(-)
@@ -63,6 +64,3 @@ index 57ea45e2dc..c395c173c1 100644
  	{ }
  };
  
--- 
-2.17.1
-

@@ -1,17 +1,16 @@
-From 3bb0dcb60edbb4df34a21371142020f7f8686838 Mon Sep 17 00:00:00 2001
+From b7ee1f9a9d144ad43e6a4c3819414f5321f5adeb Mon Sep 17 00:00:00 2001
 From: Conor Dooley <conor.dooley@microchip.com>
 Date: Fri, 16 Jul 2021 12:56:29 +0100
 Subject: [PATCH] riscv: icicle kit: add i2c support
 
 ---
- arch/riscv/dts/microchip-mpfs-icicle-kit.dts |   4 +-
- configs/microchip_mpfs_icicle_defconfig      |   4 +
- drivers/i2c/Kconfig                          |   8 +
- drivers/i2c/Makefile                         |   2 +-
- drivers/i2c/i2c-microchip.c                  | 511 ++++++++++++++++++
- drivers/i2c/i2c-microsemi.c                  | 537 +++++++++++++++++++
- include/configs/microchip_mpfs_icicle.h      |   2 +
- 7 files changed, 1065 insertions(+), 3 deletions(-)
+ configs/microchip_mpfs_icicle_defconfig |   4 +
+ drivers/i2c/Kconfig                     |   8 +
+ drivers/i2c/Makefile                    |   2 +-
+ drivers/i2c/i2c-microchip.c             | 511 ++++++++++++++++++++++
+ drivers/i2c/i2c-microsemi.c             | 537 ++++++++++++++++++++++++
+ include/configs/microchip_mpfs_icicle.h |   2 +
+ 6 files changed, 1063 insertions(+), 1 deletion(-)
  create mode 100755 drivers/i2c/i2c-microchip.c
  create mode 100755 drivers/i2c/i2c-microsemi.c
 
@@ -66,7 +65,7 @@ index acd27ac29d..d803fcbd06 100644
  obj-$(CONFIG_$(SPL_)I2C_MUX) += muxes/
 diff --git a/drivers/i2c/i2c-microchip.c b/drivers/i2c/i2c-microchip.c
 new file mode 100755
-index 0000000000..95eaccef4d
+index 0000000000..75d89e1e32
 --- /dev/null
 +++ b/drivers/i2c/i2c-microchip.c
 @@ -0,0 +1,511 @@
@@ -1138,6 +1137,3 @@ index 24990370cf..17f7358ffe 100644
  #define CONFIG_STANDALONE_LOAD_ADDR 0x80200000
  
  /* Environment options */
--- 
-2.31.1
-

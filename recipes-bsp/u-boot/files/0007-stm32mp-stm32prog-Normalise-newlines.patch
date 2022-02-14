@@ -1,4 +1,4 @@
-From 471d01dc0a6b6d8a8841088f9c19d24220ab59c0 Mon Sep 17 00:00:00 2001
+From 6c77f25ac62095a66906c7ca8454928e4c08591e Mon Sep 17 00:00:00 2001
 From: William Grant <wgrant@ubuntu.com>
 Date: Wed, 13 Oct 2021 20:56:58 +1100
 Subject: [PATCH] stm32mp: stm32prog: Normalise newlines
@@ -9,6 +9,7 @@ find(1) happened to return.
 
 Signed-off-by: William Grant <wgrant@ubuntu.com>
 Reviewed-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+
 ---
  arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)

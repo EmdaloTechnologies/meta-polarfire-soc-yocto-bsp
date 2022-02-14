@@ -1,9 +1,10 @@
-From ec211ca70022bc6da2990ead05fe2830d5d5b709 Mon Sep 17 00:00:00 2001
+From 550b6f18184b29a702e40379572577dc012e4cd0 Mon Sep 17 00:00:00 2001
 From: Lewis Hanly <lewis.hanly@microchip.com>
 Date: Tue, 3 Aug 2021 15:44:46 +0100
 Subject: [PATCH] Update the second mac address
 
 Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
+
 ---
  board/microchip/mpfs_icicle/mpfs_icicle.c | 17 ++++++++++++++++-
  1 file changed, 16 insertions(+), 1 deletion(-)
