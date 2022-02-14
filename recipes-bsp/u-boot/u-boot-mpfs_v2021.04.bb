@@ -7,6 +7,9 @@ SRC_URI = "git://git.denx.de/u-boot.git \
 	       file://${UBOOT_ENV}.txt \
 	       file://0001-riscv-icicle-kit-add-i2c-support.patch \
 	       file://0001-Update-the-second-mac-address.patch \
+	       file://0002-riscv-Update-Microchip-MPFS-Icicle-Kit-support.patch \
+	       file://0004-net-macb-Compatible-as-per-device-tree.patch \
+	       file://0007-stm32mp-stm32prog-Normalise-newlines.patch \
           "
 SRC_URI_append_icicle-kit-es = " \
     file://microchip-mpfs-icicle-kit.dts \

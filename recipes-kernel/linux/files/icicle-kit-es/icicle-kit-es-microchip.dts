@@ -129,7 +129,7 @@
 		#address-cells = <2>;
 		fabricbuf0: fabricbuf@0 {
 			compatible = "shared-dma-pool";
-			reg = <0x00 0xae000000 0x0 0x02000000>;
+			reg = <0x00 0x80000000 0x0 0x02000000>;
 			label = "fabricbuf0-ddr-c";
 		};
 		fabricbuf1: fabricbuf@1 {
@@ -139,7 +139,7 @@
 		};
 		fabricbuf2: fabricbuf@2 {
 			compatible = "shared-dma-pool";
-			reg = <0x00 0xd8000000 0x0 0x08000000>;
+			reg = <0x00 0xd0000000 0x0 0x08000000>;
 			label = "fabricbuf2-ddr-nc-wcb";
 		};
 	};
@@ -148,15 +148,10 @@
 		#size-cells = <2>;
 		compatible = "SiFive,FU540G-soc", "fu540-soc", "sifive-soc", "simple-bus";
 		ranges;
-		DDRC_CACHE_LO: memory@80000000 {
+		dma-ranges = <0 0 0 0 0x40 0>;
+		DDRC_CACHE_HI: memory@1000000000 {
 			device_type = "memory";
-			reg = <0x0 0x80000000 0x0 0x2e000000>;
-			clocks = <&clkcfg CLK_DDRC>;
-			status = "okay";
-		};
-		DDRC_CACHE_HI: memory@1040000000 {
-			device_type = "memory";
-			reg = <0x10 0x00000000 0x0 0x40000000>;
+			reg = <0x10 0x00000000 0x0 0x76000000>;
 			clocks = <&clkcfg CLK_DDRC>;
 			status = "okay";
 		};

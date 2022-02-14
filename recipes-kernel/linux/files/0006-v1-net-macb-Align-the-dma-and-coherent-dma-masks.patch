@@ -1,0 +1,47 @@
+From 67e3d85e4d02ce5308c52e079110f5baec4a9492 Mon Sep 17 00:00:00 2001
+From: Marc St-Amand <mstamand@ciena.com>
+Date: Sun, 28 Feb 2021 23:16:31 +0530
+Subject: [PATCH] net: macb: Align the dma and coherent dma masks
+
+Single page and coherent memory blocks can use different DMA masks
+when the macb accesses physical memory directly. The kernel is clever
+enough to allocate pages that fit into the requested address width.
+
+When using the ARM SMMU, the DMA mask must be the same for single
+pages and big coherent memory blocks. Otherwise the translation
+tables turn into one big mess.
+
+  [   74.959909] macb ff0e0000.ethernet eth0: DMA bus error: HRESP not OK
+  [   74.959989] arm-smmu fd800000.smmu: Unhandled context fault: fsr=0x402, iova=0x3165687460, fsynr=0x20001, cbfrsynra=0x877, cb=1
+  [   75.173939] macb ff0e0000.ethernet eth0: DMA bus error: HRESP not OK
+  [   75.173955] arm-smmu fd800000.smmu: Unhandled context fault: fsr=0x402, iova=0x3165687460, fsynr=0x20001, cbfrsynra=0x877, cb=1
+
+Since using the same DMA mask does not hurt direct 1:1 physical
+memory mappings, this commit always aligns DMA and coherent masks.
+
+Revert the DMA mask to 44 bit. With this fix, BD allocation works at
+high DDR address.
+
+Signed-off-by: Marc St-Amand <mstamand@ciena.com>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+State: pending
+---
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index f959fe236f48..0a2532d7b88c 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4577,7 +4577,7 @@ static int macb_probe(struct platform_device *pdev)
+ 
+ #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+ 	if (GEM_BFEXT(DAW64, gem_readl(bp, DCFG6))) {
+-		dma_set_mask(&pdev->dev, DMA_BIT_MASK(39));
++		dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(44));
+ 		bp->hw_dma_cap |= HW_DMA_CAP_64B;
+ 	}
+ #endif
+-- 
+2.25.1
+

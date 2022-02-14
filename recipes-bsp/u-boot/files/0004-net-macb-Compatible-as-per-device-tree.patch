@@ -1,0 +1,68 @@
+From f97e1a556ef9d29ef91975424842322267ea470b Mon Sep 17 00:00:00 2001
+From: Padmarao Begari <padmarao.begari@microchip.com>
+Date: Tue, 21 Dec 2021 00:04:58 +0530
+Subject: [PATCH v1 4/5] net: macb: Compatible as per device tree
+
+Remove the microchip compatible string and default compatible "cdns,macb"
+support both 32-bit and 64-bit DMA access.
+
+Signed-off-by: Padmarao Begari <padmarao.begari@microchip.com>
+---
+ drivers/net/macb.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/macb.c b/drivers/net/macb.c
+index 57ea45e2dc..c395c173c1 100644
+--- a/drivers/net/macb.c
++++ b/drivers/net/macb.c
+@@ -1353,7 +1353,7 @@ static const struct macb_usrio_cfg macb_default_usrio = {
+ 	.clken = MACB_BIT(CLKEN),
+ };
+ 
+-static const struct macb_config default_gem_config = {
++static struct macb_config default_gem_config = {
+ 	.dma_burst_length = 16,
+ 	.hw_dma_cap = HW_DMA_CAP_32B,
+ 	.clk_init = NULL,
+@@ -1388,8 +1388,14 @@ static int macb_eth_probe(struct udevice *dev)
+ 	macb->is_big_endian = (cpu_to_be32(0x12345678) == 0x12345678);
+ 
+ 	macb->config = (struct macb_config *)dev_get_driver_data(dev);
+-	if (!macb->config)
++	if (!macb->config) {
++		if (IS_ENABLED(CONFIG_DMA_ADDR_T_64BIT)) {
++			if (GEM_BFEXT(DAW64, gem_readl(macb, DCFG6)))
++				default_gem_config.hw_dma_cap = HW_DMA_CAP_64B;
++		}
+ 		macb->config = &default_gem_config;
++	}
++
+ 
+ #ifdef CONFIG_CLK
+ 	ret = macb_enable_clk(dev);
+@@ -1458,13 +1464,6 @@ static const struct macb_usrio_cfg sama7g5_usrio = {
+ 	.clken = BIT(2),
+ };
+ 
+-static const struct macb_config microchip_config = {
+-	.dma_burst_length = 16,
+-	.hw_dma_cap = HW_DMA_CAP_64B,
+-	.clk_init = NULL,
+-	.usrio = &macb_default_usrio,
+-};
+-
+ static const struct macb_config sama5d4_config = {
+ 	.dma_burst_length = 4,
+ 	.hw_dma_cap = HW_DMA_CAP_32B,
+@@ -1507,8 +1506,6 @@ static const struct udevice_id macb_eth_ids[] = {
+ 	{ .compatible = "cdns,zynq-gem" },
+ 	{ .compatible = "sifive,fu540-c000-gem",
+ 	  .data = (ulong)&sifive_config },
+-	{ .compatible = "microchip,mpfs-mss-gem",
+-	  .data = (ulong)&microchip_config },
+ 	{ }
+ };
+ 
+-- 
+2.17.1
+

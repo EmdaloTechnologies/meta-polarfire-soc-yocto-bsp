@@ -17,7 +17,12 @@ SRC_URI_append_icicle-kit-es = " \
     file://0002-v1-gpio-irq-fix.patch \
     file://0003-v2-gpio-bit31-fix.patch \
     file://0004-v2-uio-two-devices.patch \
+    file://0005-v1-net-macb-Limit-DMA-mapping-to-39-bits.patch \
+    file://0006-v1-net-macb-Align-the-dma-and-coherent-dma-masks.patch \
+    file://0007-v1-Remap-DTB-explicitly.patch \
  "
+
+
 
 SRC_URI_append_icicle-kit-es-amp = " \
     file://icicle-kit-es-microchip-context-a.dts \

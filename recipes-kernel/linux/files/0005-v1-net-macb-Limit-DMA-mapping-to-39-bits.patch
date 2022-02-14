@@ -1,0 +1,32 @@
+From 1c0231cc3218e09a5a3eab5f5acc0c1c9e0cd439 Mon Sep 17 00:00:00 2001
+From: Michal Simek <michal.simek@xilinx.com>
+Date: Thu, 9 Jul 2020 09:16:55 +0200
+Subject: [PATCH] net: macb: Limit DMA mapping to 39 bits
+
+Based on tests it looks like that macb dma is not able to work with BDs
+allocated above 39bits addresses. That's why limit dma to 39bits for now to
+figured it out where the problem is when BDs are higher. It could be
+configuration issue or IP limitation.
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+State: pending
+---
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 6e91f81b5d42..4ce3e3fee393 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4570,7 +4570,7 @@ static int macb_probe(struct platform_device *pdev)
+ 
+ #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+ 	if (GEM_BFEXT(DAW64, gem_readl(bp, DCFG6))) {
+-		dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
++		dma_set_mask(&pdev->dev, DMA_BIT_MASK(39));
+ 		bp->hw_dma_cap |= HW_DMA_CAP_64B;
+ 	}
+ #endif
+-- 
+2.25.1
+
