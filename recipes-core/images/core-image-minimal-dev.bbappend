@@ -4,6 +4,8 @@ EXTRA_IMAGE_FEATURES += " \
       tools-sdk"
 
 IMAGE_INSTALL = "\
+    nvme-cli \
+    smartmontools \
     expect \
     rsync \
     rng-tools \
