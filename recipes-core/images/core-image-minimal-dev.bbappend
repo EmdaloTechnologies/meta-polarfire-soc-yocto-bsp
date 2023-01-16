@@ -6,6 +6,7 @@ EXTRA_IMAGE_FEATURES += " \
 IMAGE_INSTALL = "\
     nvme-cli \
     smartmontools \
+    lmsensors \
     ppp \
     expect \
     rsync \
