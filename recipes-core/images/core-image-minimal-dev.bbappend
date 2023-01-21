@@ -7,6 +7,7 @@ IMAGE_INSTALL = "\
     nvme-cli \
     smartmontools \
     lmsensors \
+    mmc-utils \
     ppp \
     expect \
     rsync \
