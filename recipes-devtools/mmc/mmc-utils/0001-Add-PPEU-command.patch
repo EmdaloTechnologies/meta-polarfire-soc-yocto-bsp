@@ -1,0 +1,147 @@
+From 70e92a5ceae81fb72538dcc42a0ed8ee0b50d5b0 Mon Sep 17 00:00:00 2001
+From: Daire McNamara <daire.mcnamara@microchip.com>
+Date: Sat, 21 Jan 2023 16:32:47 +0000
+Subject: [PATCH] Add PPEU command
+
+---
+ mmc.c      |  6 ++++
+ mmc.h      |  6 ++++
+ mmc_cmds.c | 85 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ mmc_cmds.h |  3 ++
+ 4 files changed, 100 insertions(+)
+
+diff --git a/mmc.c b/mmc.c
+index 6c56387..950f200 100644
+--- a/mmc.c
++++ b/mmc.c
+@@ -245,6 +245,12 @@ static struct Command commands[] = {
+ 		"be 1.",
+ 	NULL
+ 	},
++	{ do_PPEU, -1,
++	"ppeu read", "<dump ctrl> <device>\n"
++		"Usage: mmc ppeu read <-d> <device>\n"
++		"-d\t dump data block",
++	NULL
++	},
+ 	{ 0, 0, 0, 0 }
+ };
+ 
+diff --git a/mmc.h b/mmc.h
+index daff62c..90e8b54 100644
+--- a/mmc.h
++++ b/mmc.h
+@@ -243,3 +243,9 @@
+ 
+ #define MMC_RSP_R1	(MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
+ #define MMC_RSP_R1B	(MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE|MMC_RSP_BUSY)
++
++#define SD_GEN_CMD 56 /* adtc, R1 */
++#define SD_BLOCK_SIZE 512 /* data block size for CMD 56 */
++#define MMC_RSP_R2 (MMC_RSP_PRESENT | MMC_RSP_136 | MMC_RSP_CRC)
++#define MMC_CMD_BCR (3 << 5)
++
+diff --git a/mmc_cmds.c b/mmc_cmds.c
+index bb0f022..54ca88a 100644
+--- a/mmc_cmds.c
++++ b/mmc_cmds.c
+@@ -3038,3 +3038,88 @@ out:
+ 	close(dev_fd);
+ 	return ret;
+ }
++
++/* PPEU - Percentage of P/E cycles Used */
++int do_PPEU(int nargs, char **argv)
++{
++	int cmd56_arg = 0x110005FB;
++	char data_in[SD_BLOCK_SIZE];
++	int fd, ret;
++	char *device;
++
++	/*CHECK(!((nargs == 2) || (nargs == 3)),
++		"Usage: mmc ppeu read <-d> <device>\n",
++		exit(1)); */
++	if(!((nargs == 2) || (nargs == 3))) {
++		fprintf(stderr, "Usage: mmc ppeu read <-d> <device>\n");
++		exit(1);
++	}
++
++	device = argv[nargs - 1];
++	fd = open(device, O_RDWR);
++	if (fd < 0) {
++		perror("open");
++		exit(1);
++	}
++
++	// execute CMD56 and get one 512-byte data block
++	ret = CMD56_data_in(fd, cmd56_arg, data_in);
++	if (ret) {
++		fprintf(stderr, "CMD56 CALL FAILED %s\n", device);
++		exit(1);
++	}
++
++	if (!strcmp("-d", argv[1]))
++		dump_data_block(data_in); // data block dumping
++
++	/* write data to stdout in CSV format */
++	printf("Fixed Filed Header: %02Xh %02Xh %02Xh %02Xh\n",
++		data_in[0], data_in[1], data_in[2], data_in[3]);
++	printf("Percentage Step Size: %d\n", data_in[7]);
++	printf("TLC/QLC Percentage Utilization: %d%%\n", data_in[8]);
++	printf("SLC Percentage Utilization: %d%%\n\n", data_in[9]);
++
++	return ret;
++}
++
++// CMD56 implementation
++int CMD56_data_in(int fd, int cmd56_arg, char *lba_block_data)
++{
++	int ret = 0;
++	struct mmc_ioc_cmd idata;
++
++	memset(&idata, 0, sizeof(idata));
++	memset(lba_block_data, 0, sizeof(__u8) * 512);
++
++	idata.write_flag = 0;
++	idata.opcode = SD_GEN_CMD;
++	idata.arg = cmd56_arg;
++	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
++	idata.blksz = SD_BLOCK_SIZE;
++	idata.blocks = 1;
++	mmc_ioc_cmd_set_data(idata, lba_block_data);
++
++	ret = ioctl(fd, MMC_IOC_CMD, &idata);
++	if (ret)
++		perror("ioctl");
++
++	return ret;
++}
++
++void dump_data_block(char *lba_block_data)
++{
++	int count = 0;
++
++	printf("CMD56 data block dumping:");
++
++	while (count < SD_BLOCK_SIZE) {
++		if (count % 16 == 0)
++			printf("\n%03d:  ", count);
++
++		printf("%02x ", lba_block_data[count]);
++		count++;
++	}
++	printf("\n");
++
++	return;
++}
+diff --git a/mmc_cmds.h b/mmc_cmds.h
+index 0f7c004..3bd19f2 100644
+--- a/mmc_cmds.h
++++ b/mmc_cmds.h
+@@ -47,3 +47,6 @@ int do_read_cid(int argc, char **argv);
+ int do_read_csd(int argc, char **argv);
+ int do_erase(int nargs, char **argv);
+ int do_general_cmd_read(int nargs, char **argv);
++int do_PPEU(int nargs, char **argv); /* Main function */
++int CMD56_data_in(int fd, int cmd56_arg, char *lba_block_data); /* Sub-function */
++void dump_data_block(char *lba_block_data); /* Sub-function */
