@@ -7,6 +7,11 @@ IMAGE_INSTALL = "\
     nvme-cli \
     smartmontools \
     lmsensors \
+    iputils \
+    nano \
+    ncurses \
+    ncurses-tools \
+    git \
     mmc-utils \
     ppp \
     expect \
