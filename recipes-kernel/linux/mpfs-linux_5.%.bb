@@ -4,7 +4,7 @@ LINUX_VERSION ?= "5.15"
 KERNEL_VERSION_SANITY_SKIP="1"
 
 BRANCH = "skycorp-linux-5.15-mchp+fpga"
-SRCREV="fc7cfbf044090207517db46acd2ffb040db1ee6f"
+SRCREV="a98fb9b5beee9517a7b24470c022ec62dcd7df2d"
 SRC_URI = " \
     git://git@github.com/EmdaloTechnologies/linux.git;protocol=ssh;branch=${BRANCH} \
 "
