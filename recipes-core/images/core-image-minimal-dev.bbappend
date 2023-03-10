@@ -1,3 +1,4 @@
+IMAGE_FEATURES += " ssh-server-openssh"
 
 EXTRA_IMAGE_FEATURES += " \
       tools-debug \      
@@ -8,6 +9,9 @@ IMAGE_INSTALL = "\
     smartmontools \
     lmsensors \
     iputils \
+    screen \
+    minicom \
+    openssh \
     nano \
     ncurses \
     ncurses-tools \
