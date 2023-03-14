@@ -1,0 +1,27 @@
+From ea490bb9ef9e174b548f740b3ce291134c940145 Mon Sep 17 00:00:00 2001
+From: Ivan Griffin <ivan.griffin@emdalo.com>
+Date: Mon, 30 Jan 2023 09:18:48 +0000
+Subject: [PATCH] fix(docker): Ensure docker service auto-starts
+
+By default, the docker.service doesn't auto-start on boot.
+This change ensures that it will.
+---
+ recipes-containers/docker/docker.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/recipes-containers/docker/docker.inc b/recipes-containers/docker/docker.inc
+index 2487456..4f376fb 100644
+--- a/recipes-containers/docker/docker.inc
++++ b/recipes-containers/docker/docker.inc
+@@ -141,7 +141,7 @@ do_install() {
+ 
+ 
+ SYSTEMD_PACKAGES = "${@bb.utils.contains('DISTRO_FEATURES','systemd','${PN}','',d)}"
+-SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES','systemd','docker.socket','',d)}"
++SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES','systemd','docker.service docker.socket','',d)}"
+ SYSTEMD_AUTO_ENABLE:${PN} = "enable"
+ 
+ # inverted logic warning. We ony want the sysvinit init to be installed if systemd
+-- 
+2.25.1
+

@@ -7,16 +7,19 @@ BRANCH = "skycorp-linux-5.15-mchp+fpga"
 SRCREV="26c9336eceedf2581e867bf6c125439fa814301e"
 SRC_URI = " \
     git://git@github.com/EmdaloTechnologies/linux.git;protocol=ssh;branch=${BRANCH} \
+    file://bsp_cmdline.cfg \
 "
 
 do_assemble_fitimage[depends] += "dt-overlay-mchp:do_deploy"
 
 SRC_URI:append:icicle-kit-es = " file://bsp_cmdline.cfg \
     file://rpi_sense_hat.cfg \
+    file://docker.cfg \
     file://qspi_flash.cfg \
 "
 SRC_URI:append:icicle-kit-es-amp = " file://bsp_cmdline.cfg \
     file://rpi_sense_hat.cfg \
+    file://docker.cfg \
     file://qspi_flash.cfg \
 "
 

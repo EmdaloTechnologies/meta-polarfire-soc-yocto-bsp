@@ -41,9 +41,11 @@ bitbake-layers add-layer ../meta-openembedded/meta-oe
 bitbake-layers add-layer ../meta-openembedded/meta-python
 bitbake-layers add-layer ../meta-openembedded/meta-multimedia
 bitbake-layers add-layer ../meta-openembedded/meta-networking
+bitbake-layers add-layer ../meta-openembedded/meta-filesystems
 bitbake-layers add-layer ../meta-riscv
 bitbake-layers add-layer ../meta-polarfire-soc-yocto-bsp
 bitbake-layers add-layer ../meta-openembedded/meta-webserver
+bitbake-layers add-layer ../meta-virtualization
 
 
 # fix the configuration

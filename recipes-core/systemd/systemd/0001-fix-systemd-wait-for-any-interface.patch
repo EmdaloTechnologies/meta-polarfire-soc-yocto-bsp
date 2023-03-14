@@ -1,0 +1,31 @@
+From 5f6591a81d1dfa3cdc703f7d2d862d4b3cbeac34 Mon Sep 17 00:00:00 2001
+From: Ivan Griffin <ivan.griffin@emdalo.com>
+Date: Fri, 27 Jan 2023 20:54:33 +0000
+Subject: [PATCH] fix(systemd): wait for any interface
+
+By default, systemd-networkd-wait-online waits quite a while
+for all network protocols and all network interfaces to come up,
+before timing out.
+
+This can delay other services (such as Docker) from starting
+automatically.
+
+This fix will enable systemd-networkd-wait-online to
+only wait for any network interface to come up.
+---
+ units/systemd-networkd-wait-online.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/units/systemd-networkd-wait-online.service.in b/units/systemd-networkd-wait-online.service.in
+index 10d8b08c8e..6dd5f79377 100644
+--- a/units/systemd-networkd-wait-online.service.in
++++ b/units/systemd-networkd-wait-online.service.in
+@@ -18,7 +18,7 @@ Before=network-online.target shutdown.target
+ 
+ [Service]
+ Type=oneshot
+-ExecStart={{ROOTLIBEXECDIR}}/systemd-networkd-wait-online
++ExecStart={{ROOTLIBEXECDIR}}/systemd-networkd-wait-online --any
+ RemainAfterExit=yes
+ 
+ [Install]
